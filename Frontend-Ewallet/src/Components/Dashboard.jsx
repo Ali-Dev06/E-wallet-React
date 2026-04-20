@@ -1,43 +1,44 @@
 import Header from "./Header"
 import Footer from "./Footer"
-export default function Dashboard(){
+
+export default function Dashboard({ user, onLogout }){
 return(
 <>
 <Header/>    
-  <main class="dashboard-main">
-    <div class="dashboard-container">
+  <main className="dashboard-main">
+    <div className="dashboard-container">
       
-      <aside class="dashboard-sidebar">
-        <nav class="sidebar-nav">
+      <aside className="dashboard-sidebar">
+        <nav className="sidebar-nav">
           <ul>
-            <li class="active">
+            <li className="active">
               <a href="#overview">
-                <i class="fas fa-home"></i>
+                <i className="fas fa-home"></i>
                 <span>Vue d'ensemble</span>
               </a>
             </li>
             <li>
               <a href="#transactions">
-                <i class="fas fa-exchange-alt"></i>
+                <i className="fas fa-exchange-alt"></i>
                 <span>Transactions</span>
               </a>
             </li>
             <li>
               <a href="#cards">
-                <i class="fas fa-credit-card"></i>
+                <i className="fas fa-credit-card"></i>
                 <span>Mes cartes</span>
               </a>
             </li>
             <li>
               <a href="#transfers">
-                <i class="fas fa-paper-plane"></i>
+                <i className="fas fa-paper-plane"></i>
                 <span>Transferts</span>
               </a>
             </li>
-            <li class="separator"></li>
+            <li className="separator"></li>
             <li>
               <a href="#support">
-                <i class="fas fa-headset"></i>
+                <i className="fas fa-headset"></i>
                 <span>Aide & Support</span>
               </a>
             </li>
@@ -45,113 +46,137 @@ return(
         </nav>
       </aside>
 
-      <div class="dashboard-content">
+      <div className="dashboard-content">
         
-        <section id="overview" class="dashboard-section active">
-          <div class="section-header">
-            <h2>Bonjour, <span id="greetingName">?</span> !</h2>
-            <p class="date-display" id="currentDate"></p>
+        <section id="overview" className="dashboard-section active">
+          <div className="section-header">
+            <h2>Bonjour, <span>{user.name}</span> !</h2>
+            <p className="date-display">{new Date().toLocaleDateString("fr-FR")}</p>
           </div>
 
-          <div class="summary-cards">
-            <div class="summary-card">
-              <div class="card-icon blue">
-                <i class="fas fa-wallet"></i>
+          <div className="summary-cards">
+            <div className="summary-card">
+              <div className="card-icon blue">
+                <i className="fas fa-wallet"></i>
               </div>
-              <div class="card-details">
-                <span class="card-label">Solde disponible</span>
-                <span class="card-value" id="availableBalance">?</span>
-              </div>
-            </div>
-
-            <div class="summary-card">
-              <div class="card-icon green">
-                <i class="fas fa-arrow-up"></i>
-              </div>
-              <div class="card-details">
-                <span class="card-label">Revenus</span>
-                <span class="card-value" id="monthlyIncome">?</span>
+              <div className="card-details">
+                <span className="card-label">Solde disponible</span>
+                <span className="card-value">{user.wallet.balance} {user.wallet.currency}</span>
               </div>
             </div>
 
-            <div class="summary-card">
-              <div class="card-icon red">
-                <i class="fas fa-arrow-down"></i>
+            <div className="summary-card">
+              <div className="card-icon green">
+                <i className="fas fa-arrow-up"></i>
               </div>
-              <div class="card-details">
-                <span class="card-label">Dépenses</span>
-                <span class="card-value" id="monthlyExpenses">?</span>
+              <div className="card-details">
+                <span className="card-label">Revenus</span>
+                <span className="card-value">
+                  {user.wallet.transactions
+                    .filter(t => t.type === "credit")
+                    .reduce((total, t) => total + t.amount, 0)} MAD
+                </span>
               </div>
             </div>
 
-            <div class="summary-card">
-              <div class="card-icon purple">
-                <i class="fas fa-credit-card"></i>
+            <div className="summary-card">
+              <div className="card-icon red">
+                <i className="fas fa-arrow-down"></i>
               </div>
-              <div class="card-details">
-                <span class="card-label">Cartes actives</span>
-                <span class="card-value" id="activeCards">?</span>
+              <div className="card-details">
+                <span className="card-label">Dépenses</span>
+                <span className="card-value">
+                  {user.wallet.transactions
+                    .filter(t => t.type === "debit")
+                    .reduce((total, t) => total + t.amount, 0)} MAD
+                </span>
+              </div>
+            </div>
+
+            <div className="summary-card">
+              <div className="card-icon purple">
+                <i className="fas fa-credit-card"></i>
+              </div>
+              <div className="card-details">
+                <span className="card-label">Cartes actives</span>
+                <span className="card-value">{user.wallet.cards.length}</span>
               </div>
             </div>
           </div>
 
-          <div class="quick-actions">
+          <div className="quick-actions">
             <h3>Actions rapides</h3>
-            <div class="action-buttons">
-              <button class="action-btn" id="quickTransfer" type="button">
-                <i class="fas fa-paper-plane"></i>
+            <div className="action-buttons">
+              <button className="action-btn" type="button">
+                <i className="fas fa-paper-plane"></i>
                 <span>Transférer</span>
               </button>
-              <button class="action-btn" id="quickTopup" type="button">
-                <i class="fas fa-plus-circle"></i>
+              <button className="action-btn" type="button">
+                <i className="fas fa-plus-circle"></i>
                 <span>Recharger</span>
               </button>
-              <button class="action-btn" id="quickRequest" type="button">
-                <i class="fas fa-hand-holding-usd"></i>
+              <button className="action-btn" type="button">
+                <i className="fas fa-hand-holding-usd"></i>
                 <span>Demander</span>
+              </button>
+              <button className="action-btn" type="button" onClick={onLogout}>
+                <i className="fas fa-sign-out-alt"></i>
+                <span>Déconnecter</span>
               </button>
             </div>
           </div>
           
-          <div class="recent-transactions">
-            <div class="section-header">
+          <div className="recent-transactions">
+            <div className="section-header">
               <h3>Transactions récentes</h3>
             </div>
-            <div class="transactions-list" id="recentTransactionsList"></div>
+            <div className="transactions-list">
+              {user.wallet.transactions.map(transaction => (
+                <div className="transaction-item" key={transaction.id}>
+                  <div>{transaction.date}</div>
+                  <div>{transaction.amount} MAD</div>
+                  <div>{transaction.type}</div>
+                  <div>{transaction.state}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section id="cards" class="dashboard-section">
-          <div class="section-header">
+        <section id="cards" className="dashboard-section">
+          <div className="section-header">
             <h2>Mes cartes</h2>
-            <button class="btn btn-secondary" id="addCardBtn" type="button">
-              <i class="fas fa-plus"></i> Ajouter une carte
+            <button className="btn btn-secondary" type="button">
+              <i className="fas fa-plus"></i> Ajouter une carte
             </button>
           </div>
           
-          <div class="cards-grid" id="cardsGrid">
-            <div class="card-item">
-              <div class="card-preview visa">
-                <div class="card-chip"></div>
-                <div class="card-number">?</div>
-                <div class="card-holder">?</div>
-                <div class="card-expiry">?</div>
-                <div class="card-type">?</div>
+          <div className="cards-grid">
+            {user.wallet.cards.map(card => (
+              <div className="card-item" key={card.numcards}>
+                <div className={`card-preview ${card.type}`}>
+                  <div className="card-chip"></div>
+                  <div className="card-number">{card.numcards}</div>
+                  <div className="card-holder">{user.name}</div>
+                  <div className="card-expiry">{card.expiry}</div>
+                  <div className="card-type">{card.type}</div>
+                </div>
+                <div className="card-actions">
+                  <button className="card-action" title="Définir par défaut" type="button">
+                    <i className="fas fa-star"></i>
+                  </button>
+                  <button className="card-action" title="Geler la carte" type="button">
+                    <i className="fas fa-snowflake"></i>
+                  </button>
+                  <button className="card-action" title="Supprimer" type="button">
+                    <i className="fas fa-trash"></i>
+                  </button>
+                </div>
               </div>
-              <div class="card-actions">
-                <button class="card-action" title="Définir par défaut" type="button">
-                  <i class="fas fa-star"></i>
-                </button>
-                <button class="card-action" title="Geler la carte" type="button">
-                  <i class="fas fa-snowflake"></i>
-                </button>
-                <button class="card-action" title="Supprimer" type="button">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
         </section>
+
       </div>
     </div>
   </main>
