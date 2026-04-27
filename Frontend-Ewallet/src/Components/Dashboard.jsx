@@ -64,7 +64,7 @@ export default function Dashboard({ user, onLogout, onUpdateUser }) {
   }
 
   function handleRechargeSubmit(payload) {
-    const transaction = buildTransaction("credit", payload.amount, {
+    const transaction = buildTransaction("recharge", payload.amount, {
       from: payload.sourceCard,
       to: user.account || user.name,
       sourceCard: payload.sourceCard,
@@ -165,7 +165,7 @@ export default function Dashboard({ user, onLogout, onUpdateUser }) {
                     <span className="card-label">Revenus</span>
                     <span className="card-value">
                       {transactions
-                        .filter((t) => t.type === "credit")
+                        .filter((t) => t.type === "credit" || t.type === "recharge")
                         .reduce((total, t) => total + t.amount, 0)} MAD
                     </span>
                   </div>
