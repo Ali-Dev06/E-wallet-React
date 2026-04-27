@@ -1082,6 +1082,11 @@ footer {
   padding: 24px;
 }
 
+.popup-balance {
+  margin: 0 0 1rem 0;
+  color: #555;
+}
+
 .btn-close {
   background: none;
   border: none;
